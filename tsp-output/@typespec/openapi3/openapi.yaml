@@ -1,0 +1,718 @@
+openapi: 3.0.0
+info:
+  title: Azure Notification Hubs Service
+  version: 2020-06
+  description: The Azure Notification Hubs service
+tags: []
+paths:
+  /installations/installation/{installationId}:
+    get:
+      operationId: Installations_getInstallation
+      summary: Gets an Azure Notification Hubs installation by Installation ID.
+      description: Get an installation by ID
+      parameters:
+        - $ref: '#/components/parameters/Azure.Core.Foundations.ApiVersionParameter'
+        - name: installationId
+          in: path
+          required: true
+          description: The installation ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Installation'
+        default:
+          description: An unexpected error response.
+          headers:
+            x-ms-error-code:
+              required: false
+              description: String error code indicating what went wrong.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Azure.Core.Foundations.ErrorResponse'
+    delete:
+      operationId: Installations_deleteInstallation
+      description: Delete an installation by ID
+      parameters:
+        - $ref: '#/components/parameters/Azure.Core.Foundations.ApiVersionParameter'
+        - name: installationId
+          in: path
+          required: true
+          description: The installation ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            There is no content to send for this request, but the headers may be
+            useful. 
+        default:
+          description: An unexpected error response.
+          headers:
+            x-ms-error-code:
+              required: false
+              description: String error code indicating what went wrong.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Azure.Core.Foundations.ErrorResponse'
+    put:
+      operationId: Installations_createOrUpdateInstallation
+      summary: Creates or overwrites an existing installation in the Notification Hub.
+      description: Creates or updates an Installation
+      parameters:
+        - $ref: '#/components/parameters/Azure.Core.Foundations.ApiVersionParameter'
+        - name: installationId
+          in: path
+          required: true
+          description: The installation ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Installation'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Installation'
+        default:
+          description: An unexpected error response.
+          headers:
+            x-ms-error-code:
+              required: false
+              description: String error code indicating what went wrong.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Azure.Core.Foundations.ErrorResponse'
+      requestBody:
+        description: The resource instance.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.InstallationCreateOrUpdate'
+  /installations/{installationId}:
+    patch:
+      operationId: Installations_updateInstallation
+      description: >-
+        Update an Azure Notification Hubs installation using JSON Patch
+        semantics
+      parameters:
+        - $ref: >-
+            #/components/parameters/Models.InstallationPatchRequest.installationId
+      responses:
+        '201':
+          description: The response to a notification hub create or update operation.
+          headers:
+            location:
+              required: false
+              description: The location header from the response
+              schema:
+                type: string
+            tracking-id:
+              required: true
+              description: The tracking ID header from the response
+              schema:
+                type: string
+            x-ms-correlation-request-id:
+              required: true
+              description: The correlation ID header from the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: string
+      requestBody:
+        description: The installation patches
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Models.JsonPatch'
+              x-typespec-name: Models.JsonPatch[]
+  /messages:
+    post:
+      operationId: Notifications_sendNotification
+      description: Send a notification using Azure Notification Hubs
+      parameters:
+        - $ref: '#/components/parameters/Azure.Core.Foundations.ApiVersionParameter'
+        - $ref: '#/components/parameters/Models.NotificationSendRequest.direct'
+        - $ref: '#/components/parameters/Models.NotificationSendRequest.test'
+        - $ref: '#/components/parameters/Models.NotificationSendRequest.platform'
+        - $ref: '#/components/parameters/Models.NotificationSendRequest.deviceHandle'
+        - $ref: '#/components/parameters/Models.NotificationSendRequest.tags'
+      responses:
+        '201':
+          description: The response to a notification hub create or update operation.
+          headers:
+            location:
+              required: false
+              description: The location header from the response
+              schema:
+                type: string
+            tracking-id:
+              required: true
+              description: The tracking ID header from the response
+              schema:
+                type: string
+            x-ms-correlation-request-id:
+              required: true
+              description: The correlation ID header from the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: An unexpected error response.
+          headers:
+            x-ms-error-code:
+              required: false
+              description: String error code indicating what went wrong.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Azure.Core.Foundations.ErrorResponse'
+      requestBody:
+        description: The notification to send
+        content:
+          application/json;charset=utf-8:
+            schema:
+              type: string
+          application/xml;charset=utf-8:
+            schema:
+              type: string
+          application/octet-stream:
+            schema:
+              type: string
+  /schedulednotifications:
+    post:
+      operationId: ScheduledNotifications_scheduleNotification
+      description: Schedule a notification
+      parameters:
+        - $ref: >-
+            #/components/parameters/Models.ScheduledNotificationSendRequest.platform
+        - $ref: >-
+            #/components/parameters/Models.ScheduledNotificationSendRequest.deviceHandle
+        - $ref: '#/components/parameters/Models.ScheduledNotificationSendRequest.tags'
+        - $ref: >-
+            #/components/parameters/Models.ScheduledNotificationSendRequest.scheduleTime
+      responses:
+        '201':
+          description: The response to a notification hub create or update operation.
+          headers:
+            location:
+              required: false
+              description: The location header from the response
+              schema:
+                type: string
+            tracking-id:
+              required: true
+              description: The tracking ID header from the response
+              schema:
+                type: string
+            x-ms-correlation-request-id:
+              required: true
+              description: The correlation ID header from the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: string
+      requestBody:
+        description: The notification to send
+        content:
+          application/json;charset=utf-8:
+            schema:
+              type: string
+          application/xml;charset=utf-8:
+            schema:
+              type: string
+          application/octet-stream:
+            schema:
+              type: string
+  /schedulednotifications/{notificationId}:
+    delete:
+      operationId: ScheduledNotifications_cancelNotification
+      description: Cancel a scheduled notification
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          description: The ID of the notification to cancel
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The response to a notification hub create or update operation.
+          headers:
+            location:
+              required: false
+              description: The location header from the response
+              schema:
+                type: string
+            tracking-id:
+              required: true
+              description: The tracking ID header from the response
+              schema:
+                type: string
+            x-ms-correlation-request-id:
+              required: true
+              description: The correlation ID header from the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  parameters:
+    Azure.Core.Foundations.ApiVersionParameter:
+      name: api-version
+      in: query
+      required: true
+      description: The API version to use for this operation.
+      schema:
+        type: string
+        minLength: 1
+    Models.InstallationPatchRequest.installationId:
+      name: installationId
+      in: path
+      required: true
+      description: The installation ID
+      schema:
+        type: string
+    Models.NotificationSendRequest.deviceHandle:
+      name: ServiceBusNotification-DeviceHandle
+      in: header
+      required: false
+      description: The notification target device handle
+      schema:
+        type: string
+    Models.NotificationSendRequest.direct:
+      name: direct
+      in: query
+      required: false
+      description: Direct send operation
+      schema:
+        type: boolean
+    Models.NotificationSendRequest.platform:
+      name: ServiceBusNotification-Format
+      in: header
+      required: true
+      description: The notification target platform
+      schema:
+        type: string
+    Models.NotificationSendRequest.tags:
+      name: ServiceBusNotification-Tags
+      in: header
+      required: false
+      description: The notification target tag expression
+      schema:
+        type: string
+    Models.NotificationSendRequest.test:
+      name: test
+      in: query
+      required: true
+      description: Enables test send for debug purposes
+      schema:
+        type: boolean
+    Models.ScheduledNotificationSendRequest.deviceHandle:
+      name: ServiceBusNotification-DeviceHandle
+      in: header
+      required: false
+      description: The notification target device handle
+      schema:
+        type: string
+    Models.ScheduledNotificationSendRequest.platform:
+      name: ServiceBusNotification-Format
+      in: header
+      required: true
+      description: The notification target platform
+      schema:
+        type: string
+    Models.ScheduledNotificationSendRequest.scheduleTime:
+      name: ServiceBusNotification-ScheduleTime
+      in: header
+      required: true
+      description: The notification schedule time
+      schema:
+        type: string
+    Models.ScheduledNotificationSendRequest.tags:
+      name: ServiceBusNotification-Tags
+      in: header
+      required: false
+      description: The notification target tag expression
+      schema:
+        type: string
+  schemas:
+    Azure.Core.Foundations.Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: One of a server-defined set of error codes.
+        message:
+          type: string
+          description: A human-readable representation of the error.
+        target:
+          type: string
+          description: The target of the error.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Azure.Core.Foundations.Error'
+          x-typespec-name: Azure.Core.Foundations.Error[]
+          description: >-
+            An array of details about specific errors that led to this reported
+            error.
+        innererror:
+          allOf:
+            - $ref: '#/components/schemas/Azure.Core.Foundations.InnerError'
+          description: >-
+            An object containing more specific information than the current
+            object about the error.
+      description: The error object.
+      required:
+        - code
+        - message
+        - details
+    Azure.Core.Foundations.ErrorResponse:
+      type: object
+      properties:
+        error:
+          allOf:
+            - $ref: '#/components/schemas/Azure.Core.Foundations.Error'
+          description: The error object.
+      description: A response containing error details.
+      required:
+        - error
+    Azure.Core.Foundations.InnerError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: One of a server-defined set of error codes.
+        innererror:
+          allOf:
+            - $ref: '#/components/schemas/Azure.Core.Foundations.InnerError'
+          description: Inner error.
+      description: >-
+        An object containing more specific information about the error. As per
+        Microsoft One API guidelines -
+        https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses.
+      required:
+        - code
+    Models.AdmInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - adm
+          description: The platform for the installation
+      description: Represents an ADM based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.SimpleInstallation'
+    Models.AppleInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - apns
+          description: The platform for the installation
+      description: Represents an Apple based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.SimpleInstallation'
+    Models.BaiduInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - baidu
+          description: The platform for the installation
+      description: Represents a Baidu based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.SimpleInstallation'
+    Models.BrowserInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - browser
+          description: The platform for the installation
+        pushHandle:
+          allOf:
+            - $ref: '#/components/schemas/Models.BrowserPushHandle'
+          description: The Web API push handle for the installation
+      description: Represents an Web Push based Azure Notification Hubs Installation
+      required:
+        - platform
+        - pushHandle
+      allOf:
+        - $ref: '#/components/schemas/Models.Installation'
+    Models.BrowserInstallationCreateOrUpdate:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - browser
+          description: The platform for the installation
+        pushHandle:
+          allOf:
+            - $ref: '#/components/schemas/Models.BrowserPushHandle'
+          description: The Web API push handle for the installation
+      description: Represents an Web Push based Azure Notification Hubs Installation
+      required:
+        - platform
+        - pushHandle
+      allOf:
+        - $ref: '#/components/schemas/Models.InstallationCreateOrUpdate'
+    Models.BrowserPushHandle:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: The Web Push API endpoint
+        p256dh:
+          type: string
+          description: The Web Push API P256DH key
+        auth:
+          type: string
+          description: The Web Push API auth secret
+      description: Represents a Web Push push handle
+      required:
+        - endpoint
+        - p256dh
+        - auth
+    Models.FcmLegacyInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - gcm
+          description: The platform for the installation
+      description: Represents an FCM Legacy based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.Installation'
+    Models.FcmLegacyInstallationCreateOrUpdate:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - gcm
+          description: The platform for the installation
+      description: Represents an FCM Legacy based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.InstallationCreateOrUpdate'
+    Models.Installation:
+      type: object
+      properties:
+        platform:
+          type: string
+          description: Discriminator property for Installation.
+        userId:
+          type: string
+          description: The user ID
+        expirationTime:
+          type: string
+          description: The installation expiration time
+          readOnly: true
+        lastUpdate:
+          type: string
+          description: The last updated date
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: string
+          x-typespec-name: string[]
+          description: The itags for the installation
+        templates:
+          type: object
+          additionalProperties:
+            type: string
+          x-typespec-name: Record<string>
+          description: The templates for the installation
+      description: Represents an Azure Notification Hubs Installation
+      discriminator:
+        propertyName: platform
+        mapping:
+          browser: '#/components/schemas/Models.BrowserInstallation'
+          gcm: '#/components/schemas/Models.FcmLegacyInstallation'
+      required:
+        - tags
+        - templates
+    Models.InstallationCreateOrUpdate:
+      type: object
+      properties:
+        platform:
+          type: string
+          description: Discriminator property for Installation.
+        installationId:
+          type: string
+          description: The installation ID
+        userId:
+          type: string
+          description: The user ID
+        tags:
+          type: array
+          items:
+            type: string
+          x-typespec-name: string[]
+          description: The itags for the installation
+        templates:
+          type: object
+          additionalProperties:
+            type: string
+          x-typespec-name: Record<string>
+          description: The templates for the installation
+      description: Represents an Azure Notification Hubs Installation
+      discriminator:
+        propertyName: platform
+        mapping:
+          browser: '#/components/schemas/Models.BrowserInstallationCreateOrUpdate'
+          gcm: '#/components/schemas/Models.FcmLegacyInstallationCreateOrUpdate'
+      required:
+        - installationId
+        - tags
+        - templates
+    Models.InstallationTemplate:
+      type: object
+      properties:
+        body:
+          type: string
+          description: The body for the installation template
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          x-typespec-name: Record<string>
+          description: The HTTP headers for the installation template
+        tags:
+          type: array
+          items:
+            type: string
+          x-typespec-name: string[]
+          description: The tags for the installation template
+      description: Represents an Azure Notification Hubs Installation Template
+      required:
+        - body
+        - headers
+    Models.JsonPatch:
+      type: object
+      properties:
+        op:
+          allOf:
+            - $ref: '#/components/schemas/Models.JsonPatchOperation'
+          description: The JSON patch operation type
+        path:
+          type: string
+          description: The JSON patch path
+        value:
+          type: string
+          description: The JSON patch value
+      description: Represents a JSON Patch operation
+      required:
+        - op
+        - path
+    Models.JsonPatchOperation:
+      type: string
+      description: Represents a JSON Patch operation type
+      enum:
+        - add
+        - remove
+        - replace
+    Models.NotificationResponse:
+      type: object
+      properties:
+        outcome:
+          type: string
+          description: The body which may contain an error in XML format
+      description: The response to a notification hub create or update operation.
+    Models.SimpleInstallation:
+      type: object
+      properties:
+        pushHandle:
+          type: string
+          description: The string based push handle for the installation
+      description: Represents a string based push handle Azure Notification Installation
+      required:
+        - pushHandle
+    Models.WindowsInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - wns
+          description: The platform for the installation
+      description: Represents a Windows based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.SimpleInstallation'
+    Models.XiaomiInstallation:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - xiaomi
+          description: The platform for the installation
+      description: Represents a Xiaomi based Azure Notification Hubs Installation
+      required:
+        - platform
+      allOf:
+        - $ref: '#/components/schemas/Models.SimpleInstallation'
+servers:
+  - url: https://{namespaceName}.servicebus.windows.net/{hubName}
+    description: Notification Hubs Namespace
+    variables:
+      namespaceName:
+        default: ''
+        description: Notification Hubs Namespace
+      hubName:
+        default: ''
+        description: Notification Hub Name
