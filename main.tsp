@@ -5,6 +5,7 @@ import "@typespec/rest";
 import "@typespec/versioning";
 import "@azure-tools/typespec-autorest";
 import "@azure-tools/typespec-azure-core";
+import "./models/feedback.tsp";
 import "./models/installation.tsp";
 import "./models/notification.tsp";
 
@@ -43,6 +44,7 @@ interface Installations {
   @summary("Creates or overwrites an existing installation in the Notification Hub.")
   op createOrUpdateInstallation is Azure.Core.ResourceCreateOrReplace<Installation>;
 
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Does not conform to standard operations."
   @doc("Update an Azure Notification Hubs installation using JSON Patch semantics")
   @patch
   op updateInstallation(
@@ -53,24 +55,37 @@ interface Installations {
 @doc("Azure Notification Hubs message operations")
 @route("/messages")
 interface Notifications {
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Does not conform to standard operations."
   @doc("Send a notification using Azure Notification Hubs")
   @post
-  op sendNotification is RpcOperation<NotificationSendRequest, NotificationResponse, {}>;
+  op sendNotification(
+    ...NotificationSendRequest
+    ): NotificationResponse;
 }
 
 @doc("Azure Notification Hubs scheduled send operations")
 @route("/schedulednotifications")
 interface ScheduledNotifications {
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Does not conform to standard operations."
   @doc("Cancel a scheduled notification")
   @delete
   op cancelNotification(
-    @doc("The ID of the notification to cancel")
-    @path notificationId: string
+    ...CancelScheduledNotificationRequest
   ): NotificationResponse;
 
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Does not conform to standard operations."
   @doc("Schedule a notification")
   @post
   op scheduleNotification(
     ...ScheduledNotificationSendRequest
   ): NotificationResponse;
+}
+
+@doc("Azure Notification Hubs PNS Feedback Operations")
+@route("/feedbackcontainer")
+interface Feedback {
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "No keys required for this operation."
+  @doc("Get the feedback for a notification hub")
+  @get
+  op getFeedbackContainerUrl(): FeedbackContainerResponse;
 }

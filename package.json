@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build:openapi3": "tsp compile . --emit @typespec/openapi3"
+    "build:openapi3": "tsp compile . --emit @typespec/openapi3",
+    "build:csharp": "tsp compile . --emit ../autorest.csharp/src/CADL.Extension/Emitter.Csharp/dist/src/index.js",
+    "build:java": "tsp compile . --emit @azure-tools/typespec-java",
+    "build:python": "tsp compile . --emit @azure-tools/typespec-python"
   },
   "dependencies": {
     "@typespec/compiler": "latest",
@@ -11,7 +14,10 @@
     "@typespec/openapi3": "latest",
     "@typespec/versioning": "latest",
     "@azure-tools/typespec-autorest": "latest",
-    "@azure-tools/typespec-azure-core": "latest"
+    "@azure-tools/typespec-azure-core": "latest",
+    "@azure-tools/typespec-csharp": "latest",
+    "@azure-tools/typespec-java": "latest",
+    "@azure-tools/typespec-python": "latest"
   },
   "private": true
 }

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/versioning";
@@ -34,9 +37,9 @@ model Installation {
   @doc("The last updated date")
   @visibility("read") lastUpdate?: string;
   @doc("The itags for the installation")
-  tags: string[];
+  tags?: string[];
   @doc("The templates for the installation")
-  templates: Record<string>;
+  templates?: Record<string>;
 }
 
 @doc("Represents an Azure Notification Hubs Installation Template")

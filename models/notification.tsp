@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/versioning";
@@ -27,6 +28,12 @@ model ScheduledNotificationSendRequest {
   @header("ServiceBusNotification-Tags") tags?: string;
   @doc("The notification schedule time")
   @header("ServiceBusNotification-ScheduleTime") scheduleTime: string;
+}
+
+@doc("The request to cancel a scheduled notification.")
+model CancelScheduledNotificationRequest {
+  @doc("The ID of the notification to cancel")
+  @path notificationId: string
 }
 
 @doc("The request to a notification hub send action.")

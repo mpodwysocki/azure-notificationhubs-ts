@@ -5,6 +5,18 @@ info:
   description: The Azure Notification Hubs service
 tags: []
 paths:
+  /feedbackcontainer:
+    get:
+      operationId: Feedback_getFeedbackContainerUrl
+      description: Get the feedback for a notification hub
+      parameters: []
+      responses:
+        '200':
+          description: Represents a Feedback Container response
+          content:
+            application/json:
+              schema:
+                type: string
   /installations/installation/{installationId}:
     get:
       operationId: Installations_getInstallation
@@ -156,7 +168,6 @@ paths:
       operationId: Notifications_sendNotification
       description: Send a notification using Azure Notification Hubs
       parameters:
-        - $ref: '#/components/parameters/Azure.Core.Foundations.ApiVersionParameter'
         - $ref: '#/components/parameters/Models.NotificationSendRequest.direct'
         - $ref: '#/components/parameters/Models.NotificationSendRequest.test'
         - $ref: '#/components/parameters/Models.NotificationSendRequest.platform'
@@ -185,18 +196,6 @@ paths:
             application/json:
               schema:
                 type: string
-        default:
-          description: An unexpected error response.
-          headers:
-            x-ms-error-code:
-              required: false
-              description: String error code indicating what went wrong.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Azure.Core.Foundations.ErrorResponse'
       requestBody:
         description: The notification to send
         content:
@@ -261,12 +260,7 @@ paths:
       operationId: ScheduledNotifications_cancelNotification
       description: Cancel a scheduled notification
       parameters:
-        - name: notificationId
-          in: path
-          required: true
-          description: The ID of the notification to cancel
-          schema:
-            type: string
+        - $ref: '#/components/parameters/Models.CancelScheduledNotificationRequest'
       responses:
         '201':
           description: The response to a notification hub create or update operation.
@@ -300,6 +294,13 @@ components:
       schema:
         type: string
         minLength: 1
+    Models.CancelScheduledNotificationRequest:
+      name: notificationId
+      in: path
+      required: true
+      description: The ID of the notification to cancel
+      schema:
+        type: string
     Models.InstallationPatchRequest.installationId:
       name: installationId
       in: path
@@ -546,6 +547,15 @@ components:
         - platform
       allOf:
         - $ref: '#/components/schemas/Models.InstallationCreateOrUpdate'
+    Models.FeedbackContainerResponse:
+      type: object
+      properties:
+        containerUrl:
+          type: string
+          description: The URL of the Feedback Container
+      description: Represents a Feedback Container response
+      required:
+        - containerUrl
     Models.Installation:
       type: object
       properties:
