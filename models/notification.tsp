@@ -14,6 +14,125 @@ using Azure.Core;
 
 namespace NotificationHubs.Models;
 
+@doc("Represents a direct send notification request.")
+model DirectSendRequest {
+  @doc("Direct send operation")
+  @query direct: true,
+  @doc("The notification target device handle")
+  @header("ServiceBusNotification-DeviceHandle") deviceHandle: string;
+}
+
+@doc("Represents an audience notification request.")
+model AudienceSendRequest {
+  @doc("The notification target tag expression")
+  @header("ServiceBusNotification-Tags") tags?: string
+}
+
+alias NotificationAudienceRequest = DirectSendRequest | AudienceSendRequest;
+
+@doc("Represents an Apple based notification request.")
+model AppleNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "apple"
+}
+
+@doc("Represents an Amazon Device Messaging based notification request.")
+model AdmNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "adm"
+}
+
+@doc("Represents a Web Push based notification request.")
+model BrowserNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8";
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "browser";
+  @doc("The P256DH key for the browser push subscription")
+  @header("P256DH") p256dh: string;
+  @doc("The Auth key for the browser push subscription")
+  @header("Auth") auth: string;
+}
+
+@doc("Represents a Baidu based notification request.")
+model BaiduNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "baidu"
+}
+
+@doc("Represents a Firebase Legacy HTTP based notification request.")
+model FirebaseLegacyNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "gcm"
+}
+
+@doc("Represents a Xiaomi based notification request.")
+model XiaomiNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/json;charset=utf-8",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "xiaomi"
+}
+
+@doc("Represents a WNS Badge based notification request.")
+model WindowsBadgeNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/xml",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "windows";
+  @doc("The WNS type")
+  @header("X-WNS-Type") type: "wns/badge";
+}
+
+@doc("Represents a WNS Tile based notification request.")
+model WindowsTileNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/xml",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "windows";
+  @doc("The WNS type")
+  @header("X-WNS-Type") type: "wns/tile";
+}
+
+@doc("Represents a WNS Toast based notification request.")
+model WindowsToastNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/xml",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "windows";
+  @doc("The WNS type")
+  @header("X-WNS-Type") type: "wns/toast";
+}
+
+@doc("Represents a WNS Raw based notification request.")
+model WindowsRawNotificationRequest {
+  @doc("Content-Type header for the request")
+  @header("Content-Type") contentType: "application/octet-stream",
+  @doc("The notification target platform")
+  @header("ServiceBusNotification-Format") platform: "windows";
+  @doc("The WNS type")
+  @header("X-WNS-Type") type: "wns/raw";
+}
+
+alias DeviceNotificationRequest = AppleNotificationRequest
+  | AdmNotificationRequest
+  | BrowserNotificationRequest
+  | BaiduNotificationRequest
+  | FirebaseLegacyNotificationRequest
+  | XiaomiNotificationRequest
+  | WindowsBadgeNotificationRequest
+  | WindowsTileNotificationRequest
+  | WindowsToastNotificationRequest
+  | WindowsRawNotificationRequest;
+
 @doc("The request to a notification hub scheduled send action.")
 model ScheduledNotificationSendRequest {
   @doc("Content-Type header for the request")
@@ -22,8 +141,6 @@ model ScheduledNotificationSendRequest {
   @body notification: string,
   @doc("The notification target platform")
   @header("ServiceBusNotification-Format") platform: string,
-  @doc("The notification target device handle")
-  @header("ServiceBusNotification-DeviceHandle") deviceHandle?: string;
   @doc("The notification target tag expression")
   @header("ServiceBusNotification-Tags") tags?: string;
   @doc("The notification schedule time")
